@@ -2,14 +2,28 @@ const json_response = require("../../lib/json_response");
 const data_source = require("../../data");
 const createError = require("http-errors");
 const moment = require("moment");
+const array_chunk = require("../../lib/array_chunk");
 
 module.exports = function (req, res, next) {
   const query_allowed = ["since", "until", "date", "name", "company", "job"];
 
-  const query_ignore = ["orderBy", "apiKey"];
+  const query_ignore = ["orderBy", "apiKey", "page", "hitsPerPage"];
   let orderBy = {
     date: "ASC",
   };
+
+  let { hitsPerPage, page } = req.query;
+  let nextPage = false;
+
+  if (!hitsPerPage) {
+    hitsPerPage = 20;
+  }
+  if (!page) {
+    page = 1;
+  }
+
+  hitsPerPage = parseInt(hitsPerPage);
+  page = parseInt(page);
 
   const disallowed = Object.keys(req.query).filter(
     (q) => query_allowed.indexOf(q) === -1 && query_ignore.indexOf(q) === -1
@@ -96,7 +110,24 @@ module.exports = function (req, res, next) {
         });
       });
 
-      json_response({ data }, res);
+      total_records = data.length;
+      total_pages = Math.ceil(total_records / hitsPerPage);
+      data = array_chunk(data, hitsPerPage);
+      let new_params = Object.assign({}, req.query);
+      new_params.page = page + 1;
+
+      new_params = new URLSearchParams(new_params);
+
+      if (page - 1 < total_pages) {
+        nextPage =
+          "https://www.journodev.com/learn-api/api/records" +
+          new_params.toString();
+      }
+
+      json_response(
+        { data: data[page - 1], page, hitsPerPage, total_pages, nextPage },
+        res
+      );
     } catch (e) {
       next(createError(`Error: ${e.message}`));
     }
