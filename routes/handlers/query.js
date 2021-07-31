@@ -118,9 +118,9 @@ module.exports = function (req, res, next) {
 
       new_params = new URLSearchParams(new_params);
 
-      if (page - 1 < total_pages) {
+      if (page < total_pages) {
         nextPage =
-          "https://www.journodev.com/learn-api/api/records&" +
+          "https://www.journodev.com/learn-api/api/records?" +
           new_params.toString();
       }
 
