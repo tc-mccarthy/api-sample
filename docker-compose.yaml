@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  api-service:
+    container_name: cuny-api-service
+    hostname: cuny-api-service
+    ports:
+      - "49528:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      ENV: ${ENV}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASS: ${MYSQL_PASS}
+      DC_HOST: ${DC_HOST}
+    build: .
+    restart: "always"
+networks:
+  default:
+    external:
+      name: mccarthy-digital-consulting
