@@ -119,7 +119,7 @@ The API breaks results sets up into pages to keep response payloads small.
 
 By default, the API responds with up to 20 items in a payload. You can get the next 20 items by adding/updating a `page=<PAGE NUMBER>` parameter to your query. You can also change the number of records in the response payload by adding/updating a `hitsPerPage=<RECORDS PER RESPONSE>` parameter to your request.
 
-Response payloads include `hitsPerPage`, `page`, `total_records`, and `total_pages` metadata to inform your code about visible and remaining records. The metadata will also include a `next` parameter with the full URL to the next page of records if your query and parameters are spanned across multiple pages.
+Response payloads include `hitsPerPage`, `page`, `total_records`, and `total_pages` metadata to inform your code about visible and remaining records. The metadata will also include a `nextPage` parameter with the full URL to the next page of records if your query and parameters are spanned across multiple pages. You can write your logic to check for that parameter's value and, if it's not false, simply pass the URL off to pull in the next page.
 
 The following pulls in every record, displaying a maximum of 100 records per page and loads up the third page of results
 
