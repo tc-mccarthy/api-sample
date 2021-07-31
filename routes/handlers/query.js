@@ -120,7 +120,7 @@ module.exports = function (req, res, next) {
 
       if (page - 1 < total_pages) {
         nextPage =
-          "https://www.journodev.com/learn-api/api/records" +
+          "https://www.journodev.com/learn-api/api/records&" +
           new_params.toString();
       }
 
