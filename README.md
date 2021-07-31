@@ -57,6 +57,14 @@ This will return an array of all records available via this API
 https://www.journodev.com/learn-api/api/records
 ```
 
+### Retrieving a single record
+
+Every record has a unique ID and you can retrieve each record by that ID using the following URL structure
+
+```
+https://www.journodev.com/learn-api/api/records/2fb6547f-11d4-4cf0-8afa-29e7c4f40188
+```
+
 ### Filtering/Querying
 
 The API accepts key=value query string pairs to narrow your result set. For example, if you wanted to query for all records where the `job` is `Exhibition designer`
@@ -105,12 +113,26 @@ You sometimes need to be able to sort in multiple tiers. The following will orde
 https://www.journodev.com/learn-api/api/records?orderBy=job ASC,name ASC
 ```
 
-### Putting it all together
+### Pagination
 
-Filtering and ordering can be readily combined. The following finds all records from Jan. 1, 2020 - Jan. 1, 2021 with the records sorted by `job` name
+The API breaks results sets up into pages to keep response payloads small.
+
+By default, the API responds with up to 20 items in a payload. You can get the next 20 items by adding/updating a `page=<PAGE NUMBER>` parameter to your query. You can also change the number of records in the response payload by adding/updating a `hitsPerPage=<RECORDS PER RESPONSE>` parameter to your request.
+
+Response payloads include `hitsPerPage`, `page`, `total_records`, and `total_pages` metadata to inform your code about visible and remaining records. The metadata will also include a `next` parameter with the full URL to the next page of records if your query and parameters are spanned across multiple pages.
+
+The following pulls in every record, displaying a maximum of 100 records per page and loads up the third page of results
 
 ```
-https://www.journodev.com/learn-api/api/records?since=2020-01-01&until=2021-01-01&orderBy=job%20ASC
+https://www.journodev.com/learn-api/api/records?page=2&hitsPerPage=100
+```
+
+### Putting it all together
+
+Filtering and ordering can be readily combined. The following finds all records from Jan. 1, 2020 - Jan. 1, 2021 with the records sorted by `job` name. The response set contains 50 records per page and loads up the second page of results.
+
+```
+https://www.journodev.com/learn-api/api/records?since=2020-01-01&until=2021-01-01&orderBy=job%20ASC&page=2&hitsPerPage=50
 ```
 
 ## License
